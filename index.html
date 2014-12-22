@@ -7,6 +7,20 @@
     <meta name="description" content="D3-progress-indicator : Radial progress indicators implemented in D3">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <style type="text/css">
+      .progress-indicator {
+        background-color: #ffffff;
+        font: 10px sans-serif;
+        height: 300px;
+        text-shadow: none;
+        width: 300px;
+      }
+      .progress-indicator .total{
+        font-size: 45px;
+        font-weight: bold;
+        fill:#ccc;
+      }
+    </style>
 
     <title>D3-progress-indicator</title>
   </head>
@@ -14,25 +28,28 @@
   <body>
 
     <!-- HEADER -->
-    <div id="header_wrap" class="outer">
+    <!--div id="header_wrap" class="outer">
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/thatguynamedandy/d3-progress-indicator">View on GitHub</a>
-
-          <h1 id="project_title">D3-progress-indicator</h1>
+          <h1 id="project_title">D3 Progress Indicators</h1>
           <h2 id="project_tagline">Radial progress indicators implemented in D3</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/thatguynamedandy/d3-progress-indicator/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/thatguynamedandy/d3-progress-indicator/tarball/master">Download this project as a tar.gz file</a>
-            </section>
         </header>
-    </div>
+    </div-->
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a id="d3-progress-indicators" class="anchor" href="#d3-progress-indicators" aria-hidden="true"><span class="octicon octicon-link"></span></a>D3 Progress Indicators</h1>
+          <a id="d3-progress-indicators" class="anchor" href="#d3-progress-indicators" aria-hidden="true">
+            <span class="octicon octicon-link"></span>
+          </a>
+            D3 Progress Indicators
+        </h1>
+
+        <div id="progress-indicator-1" class="progress-indicator"></div>
+
+        <div id="progress-indicator-2" class="progress-indicator"></div>
+
       </section>
     </div>
 
@@ -44,7 +61,20 @@
       </footer>
     </div>
 
-    
+    <script src="bower_components/d3/d3.min.js"></script>
+    <script src="bower_components/d3-playground/lib/progress-indicator.js"></script>
+    <script>
+      new ProgressIndicator({
+        percentageCompleted: 77,
+        selector: "#progress-indicator-1",
+        milestones: [10, 75, 50]
+      });
+      new ProgressIndicator({
+        percentageCompleted: 17,
+        selector: "#progress-indicator-2",
+        milestones: [33, 66, 0]
+      });
+    </script>
 
   </body>
 </html>

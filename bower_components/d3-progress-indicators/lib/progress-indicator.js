@@ -1,20 +1,5 @@
 var ProgressIndicator = (function() {
 
-  var arc = d3.svg.arc()
-    .startAngle( function (d) {
-      return d.startAngle;
-    })
-    .endAngle( function (d) {
-      return d.endAngle;
-    })
-    .innerRadius(innerRadius)
-    .outerRadius(radius);
-
-  //Arc to position milestone labels
-  var labelArc = d3.svg.arc()
-    .innerRadius(innerRadius)
-    .outerRadius(radius + xPadding);
-
   ProgressIndicator.prototype = {
 
     arcTween : function(d, i) {
@@ -51,33 +36,58 @@ var ProgressIndicator = (function() {
     }
   }
 
-  function ProgressIndicator() {
+  function ProgressIndicator(opts, data) {
 
-    var opts = data = {};
-
-    switch(arguments.length) {
-      case 0 :
-        throw "Please provide a data object for the indicator"
-      case 1 :
-        data = arguments[0];
-        break;
-      default
-        opts = arguments[0];
-        data = arguments[1];
+    if(arguments.length < 2) {
+      throw "Please provide options and data for the indicator"
     }
 
     var
-    radius = opts.radius || 100,
-    innerRadius = 45,
-    xPadding = 100,
-    yPadding = 20,
-    width = radius * 2,
-    milestoneRadius = innerRadius / 10,
-    height = width,
-    tweenDuration = 2500;
+      radius = opts.radius || 100,
+      diameter = radius * 2,
+      xPadding = opts.xPadding || 25,//100,
+      yPadding = opts.yPadding || 25,//20,
+      width = diameter + (xPadding * 2),
+      height = diameter + (yPadding * 2),
+      milestoneRadius = innerRadius / 10,
+      milestoneTriangle = opts.milestoneTriangle || 8,
+      fontSize = opts.fontSize || 45,
+      innerRadius = fontSize + 2,
+      tweenDuration = opts.duration || 2500;
 
+    var arc = d3.svg.arc()
+      .startAngle( function (d) {
+        return d.startAngle;
+      })
+      .endAngle( function (d) {
+        return d.endAngle;
+      })
+      .innerRadius(innerRadius)
+      .outerRadius(radius);
 
-    var percentageCompleted = opts.percentageCompleted || 0;
+    //Arc to position milestone labels
+    var labelArc = d3.svg.arc()
+      .innerRadius(radius + (milestoneTriangle * 2))
+      .outerRadius(radius + (milestoneTriangle * 2));
+
+    //FIXME: Arc tween cannot be on the prototype due to it's dependency
+    //on non-static arc variable, if possible handle this better.
+    this.arcTween = function(d, i) {
+      var i = d3.interpolate({
+        startAngle: 0,
+        endAngle: 0
+      }, {
+        startAngle: d.startAngle,
+        endAngle: d.endAngle
+      });
+
+      return function(t) {
+        var b = i(t);
+        return arc(b);
+      };
+    };
+
+    var percentageCompleted = data.percentageCompleted || 0;
 
     var arcData = [{
       startAngle:0,
@@ -86,16 +96,13 @@ var ProgressIndicator = (function() {
 
     //Add Elements
     var svg = d3.select(opts.selector).append("svg:svg")
-      .attr("width", width + (xPadding * 2))
-      .attr("height", height + (yPadding * 2));
-
-    var container = svg.append("svg:g")
       .attr("width", width)
-      .attr("height", height)
-      .attr("transform", "translate(" + xPadding + "," + yPadding + ")");
+      .attr("height", height);
 
-    var indicator = container.append("svg:g")
-      .attr("transform", "translate(" + (width/2) + "," + (height/2) + ")");
+    var indicator = svg.append("svg:g")
+      .attr("width", diameter)
+      .attr("height", diameter)
+      .attr("transform", "translate(" + (diameter/2 + xPadding) + "," + (diameter/2 + yPadding) + ")");
 
     indicator.append("svg:circle")
       .attr("class", "outer-circle")
@@ -105,21 +112,24 @@ var ProgressIndicator = (function() {
       .attr("class", "inner-circle")
       .attr("r", innerRadius);
 
-    indicator.append("svg:text")
+    var textGroup = indicator.append("svg:g")
+      .attr("transform", "translate(" + fontSize / 2 + ",0)");
+
+    textGroup.append("svg:text")
       .attr("class", "total")
-      .attr("dy", 15)
-      .attr("dx", 18)
+      .attr("dy", fontSize / 3)
+      .attr("font-size", fontSize)
       .attr("text-anchor", "end")
       .data([percentageCompleted])
       .transition()
       .duration(tweenDuration)
       .tween("text", this.textTween);
 
-    indicator.append("svg:text")
+    textGroup.append("svg:text")
       .attr("class", "percent")
-      .attr("dy", 15)
-      .attr("dx", 27)
-      .attr("text-anchor", "middle")
+      .attr("dy", fontSize / 3)
+      .attr("font-size", fontSize / 2)
+      .attr("text-anchor", "start")
       .text("%");
 
     indicator.append("svg:path")
@@ -129,19 +139,21 @@ var ProgressIndicator = (function() {
       .duration(tweenDuration)
       .attrTween("d", this.arcTween);
 
-
-    if(opts.milestones) {
+    if(data.milestones) {
       //Add a radian valuse for each milestone
-      d3.map(opts.milestones).forEach(function(i, milestone) {
+      d3.map(data.milestones).forEach(function(i, milestone) {
         milestone.radian = milestone.value / 100 * (2 * Math.PI);
         milestone.percentageCompleted = percentageCompleted;
       });
 
+      var trianglePath = "M  0 0 l " + (0 - milestoneTriangle) + " "
+        + (0 - milestoneTriangle) + " l " + (milestoneTriangle * 2) +" 0 z";
+
       svg.selectAll(".milestone")
-        .data(opts.milestones)
+        .data(data.milestones)
         .enter()
         .append("path")
-        .attr("d", "M  0 0 l -8 -8 l 16 0 z")
+        .attr("d", trianglePath)
         .attr("class", "milestone")
         .attr("transform", function(d) {
           var x = (Math.sin(d.radian) * radius) + radius + xPadding,
@@ -154,7 +166,7 @@ var ProgressIndicator = (function() {
         .tween("acheivedMilstones", this.milestoneTween);
 
       indicator.selectAll(".milestone-text")
-        .data(opts.milestones)
+        .data(data.milestones)
         .enter()
         .append("text")
         .attr("class", "milestone-text")

@@ -4,52 +4,120 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="D3-progress-indicator : Radial progress indicators implemented in D3">
+    <meta name="description" content="Radial account creation progress indicatars, with milstones of achievement">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="bower_components/d3-progress-indicators/lib/progress-indicator.css">
     <style type="text/css">
-      .progress-indicator {
-        background-color: #ffffff;
-        font: 10px sans-serif;
-        height: 300px;
-        text-shadow: none;
-        width: 300px;
+      #progress-indicator-1 .arc,
+      #progress-indicator-1 .milestone {
+        fill:#FF4081
       }
-      .progress-indicator .total{
-        font-size: 45px;
-        font-weight: bold;
-        fill:#ccc;
+
+      #progress-indicator-2 .arc,
+      #progress-indicator-2 .milestone {
+        fill:#3F51B5
+      }
+
+      #progress-indicator-3 .arc,
+      #progress-indicator-3 .milestone {
+        fill:#009688
+      }
+
+      .outer-circle {
+        fill:#E0E0E0;
+      }
+
+      .inner-circle {
+        fill:white;
+      }
+
+      pre {
+        margin-top:20px;
+        margin-bottom:40px;
       }
     </style>
 
-    <title>D3-progress-indicator</title>
+    <title>D3 Progress indicator</title>
   </head>
 
   <body>
-
-    <!-- HEADER -->
-    <!--div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/thatguynamedandy/d3-progress-indicator">View on GitHub</a>
-          <h1 id="project_title">D3 Progress Indicators</h1>
-          <h2 id="project_tagline">Radial progress indicators implemented in D3</h2>
-        </header>
-    </div-->
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-          <a id="d3-progress-indicators" class="anchor" href="#d3-progress-indicators" aria-hidden="true">
-            <span class="octicon octicon-link"></span>
-          </a>
-            D3 Progress Indicators
+            D3 - Progress indicators
         </h1>
-
+        <p>
+          <strong>Example 1: </strong>
+          Visually highlighting how complete an item is, overrides some simple display options.
+          Additional styling is done via css.
+        </p>
         <div id="progress-indicator-1" class="progress-indicator"></div>
+        <pre>
+    new ProgressIndicator({
+      selector: "#progress-indicator-1",
+      radius:50,
+      fontSize:35
+    }, {
+      percentageCompleted: 92,
+    });
+        </pre>
 
+        <p>
+          <strong>Example 2: </strong>
+          Inclusion of milestone data, colour indication of which milestones have been achieved.
+        </p>
         <div id="progress-indicator-2" class="progress-indicator"></div>
+        <pre>
+    new ProgressIndicator({
+      selector: "#progress-indicator-2",
+      xPadding: 110
+    }, {
+      percentageCompleted: 78,
+      milestones: [{
+        value: 25,
+        text: "Account created"
+      }, {
+        value: 50,
+        text: "Profile complete"
+      }, {
+        value:75,
+        text: "Profile visible"
+      }]
+    });
+        </pre>
 
+        <p>
+          <strong>Example 3: </strong>
+          Another milestones example with a few additional display overrides
+        </p>
+        <div id="progress-indicator-3" class="progress-indicator"></div>
+        <pre>
+    new ProgressIndicator({
+      selector: "#progress-indicator-3",
+      radius:60,
+      fontSize:40,
+      milestoneTriangle:5,
+      xPadding: 50
+    }, {
+      percentageCompleted: 27,
+      milestones: [{
+        value: 20,
+        text: "Level 1"
+      }, {
+        value: 40,
+        text: "Level 2"
+      }, {
+        value: 60,
+        text: "Level 3"
+      }, {
+        value: 80,
+        text: "Level 4"
+      }]
+    });
+        </pre>
       </section>
     </div>
 
@@ -62,18 +130,56 @@
     </div>
 
     <script src="bower_components/d3/d3.min.js"></script>
-    <script src="bower_components/d3-playground/lib/progress-indicator.js"></script>
+    <script src="bower_components/d3-progress-indicators/lib/progress-indicator.js"></script>
     <script>
       new ProgressIndicator({
-        percentageCompleted: 77,
         selector: "#progress-indicator-1",
-        milestones: [10, 75, 50]
+        radius:50,
+        fontSize:35
+      }, {
+        percentageCompleted: 92,
       });
+
       new ProgressIndicator({
-        percentageCompleted: 17,
         selector: "#progress-indicator-2",
-        milestones: [33, 66, 0]
+        xPadding: 110
+      }, {
+        percentageCompleted: 78,
+        milestones: [{
+          value: 25,
+          text: "Account created"
+        }, {
+          value: 50,
+          text: "Profile complete"
+        }, {
+          value:75,
+          text: "Profile visible"
+        }]
       });
+
+      new ProgressIndicator({
+        selector: "#progress-indicator-3",
+        radius:60,
+        fontSize:40,
+        milestoneTriangle:5,
+        xPadding: 50
+      }, {
+        percentageCompleted: 27,
+        milestones: [{
+          value: 20,
+          text: "Level 1"
+        }, {
+          value: 40,
+          text: "Level 2"
+        }, {
+          value: 60,
+          text: "Level 3"
+        }, {
+          value: 80,
+          text: "Level 4"
+        }]
+      });
+
     </script>
 
   </body>

@@ -1,12 +1,12 @@
 {
-  "name": "d3-playground",
+  "name": "d3-progress-indicator",
   "version": "0.0.0",
-  "description": "Just a place for me to experiment with D3",
+  "description": "Radial progress indicators implemented with d3",
   "moduleType": [
     "amd"
   ],
   "license": "MIT",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",

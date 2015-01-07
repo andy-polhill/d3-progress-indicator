@@ -9,6 +9,7 @@ var ProgressIndicator = (function() {
 
       //clear existing transition
       count.transition();
+      milestones.classed(ACHIEVED_CLASS, false).transition()
       d3.timer.flush();
 
       count.text("0")
@@ -20,13 +21,11 @@ var ProgressIndicator = (function() {
         .duration(tweenDuration)
         .attrTween("d", this.arcTween);
 
-      if(milestones) {
-        milestones
-          .classed(ACHIEVED_CLASS, false)
-          .transition()
-          .duration(tweenDuration)
-          .tween("acheivedMilstones", this.milestoneTween);
-      }
+      milestones
+        .classed(ACHIEVED_CLASS, false)
+        .transition()
+        .duration(tweenDuration)
+        .tween("acheivedMilstones", this.milestoneTween);
     }
 
     if(arguments.length < 2) {
@@ -34,17 +33,24 @@ var ProgressIndicator = (function() {
     }
 
     var
+      //option defaults
       radius = opts.radius || 100,
-      diameter = radius * 2,
       xPadding = opts.xPadding || 25,
       yPadding = opts.yPadding || 25,
-      width = diameter + (xPadding * 2),
-      height = diameter + (yPadding * 2),
-      milestoneRadius = innerRadius / 10,
       milestoneTriangle = opts.milestoneTriangle || 8,
       fontSize = opts.fontSize || 45,
+      tweenDuration = opts.duration || 2500,
+
+      //data defaults
+      milestoneData = data.milestones ||[],
+      percentageCompleted = data.percentageCompleted || 0;
+
+      //calculated defaults
+      diameter = radius * 2,
+      width = diameter + (xPadding * 2),
+      height = diameter + (yPadding * 2),
       innerRadius = fontSize + 2,
-      tweenDuration = opts.duration || 2500;
+      milestoneRadius = innerRadius / 10;
 
     var arcCalc = d3.svg.arc()
       .startAngle( function (d) {
@@ -77,8 +83,6 @@ var ProgressIndicator = (function() {
     var labelArc = d3.svg.arc()
       .innerRadius(radius + (milestoneTriangle * 2))
       .outerRadius(radius + (milestoneTriangle * 2));
-
-    var percentageCompleted = data.percentageCompleted || 0;
 
     var arcData = [{
       startAngle:0,
@@ -127,81 +131,64 @@ var ProgressIndicator = (function() {
       .attr("class", "arc")
       .data(arcData)
 
-    if(data.milestones) {
-      //Add a radian valuse for each milestone
-      d3.map(data.milestones).forEach(function(i, milestone) {
-        milestone.radian = milestone.value / 100 * (2 * Math.PI);
-        milestone.percentageCompleted = percentageCompleted;
+    //Add a radian valuse for each milestone
+    d3.map(data.milestones).forEach(function(i, milestone) {
+      milestone.radian = milestone.value / 100 * (2 * Math.PI);
+      milestone.percentageCompleted = percentageCompleted;
+    });
+
+    var trianglePath = "M  0 0 l " + (0 - milestoneTriangle) + " "
+      + (0 - milestoneTriangle) + " l " + (milestoneTriangle * 2) +" 0 z";
+
+    var milestones = svg.selectAll(".milestone")
+      .data(milestoneData)
+      .enter()
+      .append("path")
+      .attr("d", trianglePath)
+      .attr("class", "milestone")
+      .attr("transform", function(d) {
+        var x = (Math.sin(d.radian) * radius) + radius + xPadding,
+          y = 0 - ((Math.cos(d.radian) * radius) - radius - yPadding),
+          rotate = (d.radian * 180 / Math.PI);
+        return "translate(" + x + "," + y + "), rotate (" + rotate + ")";
       });
 
-      var trianglePath = "M  0 0 l " + (0 - milestoneTriangle) + " "
-        + (0 - milestoneTriangle) + " l " + (milestoneTriangle * 2) +" 0 z";
+    indicator.selectAll(".milestone-text")
+      .data(milestoneData)
+      .enter()
+      .append("text")
+      .attr("class", "milestone-text")
+      .attr("dy", 4)
+      .text(function(d) {
+        return d.text;
+      })
+      .attr("text-anchor", function(d) {
+        //TODO Is there a more suitable way to do this with D3
+        if(d.value > 0 && d.value < 50 ) {
+          return "start";
+        }
+        else if(d.value > 50 && d.value < 100 ) {
+          return "end";
+        }
+        else if( d.value === 50 || d.value === 100 ) {
+          return "middle";
+        }
+      })
+      .attr("transform", function(d) {
+        var x = (Math.sin(d.radian) * radius) + radius + xPadding,
+          y = 0 - ((Math.cos(d.radian) * radius) - radius - yPadding);
 
-      var milestones = svg.selectAll(".milestone")
-        .data(data.milestones)
-        .enter()
-        .append("path")
-        .attr("d", trianglePath)
-        .attr("class", "milestone")
-        .attr("transform", function(d) {
-          var x = (Math.sin(d.radian) * radius) + radius + xPadding,
-            y = 0 - ((Math.cos(d.radian) * radius) - radius - yPadding),
-            rotate = (d.radian * 180 / Math.PI);
-          return "translate(" + x + "," + y + "), rotate (" + rotate + ")";
-        });
+        labelArc
+          .endAngle(d.radian)
+          .startAngle(d.radian);
 
-      indicator.selectAll(".milestone-text")
-        .data(data.milestones)
-        .enter()
-        .append("text")
-        .attr("class", "milestone-text")
-        .attr("dy", 4)
-        .text(function(d) {
-          this.textContent = d.text;
-        })
-        .attr("text-anchor", function(d) {
-          //TODO Is there a more suitable way to do this with D3
-          if(d.value > 0 && d.value < 50 ) {
-            return "start";
-          }
-          else if(d.value > 50 && d.value < 100 ) {
-            return "end";
-          }
-          else if( d.value === 50 || d.value === 100 ) {
-            return "middle";
-          }
-        })
-        .attr("transform", function(d) {
-          var x = (Math.sin(d.radian) * radius) + radius + xPadding,
-            y = 0 - ((Math.cos(d.radian) * radius) - radius - yPadding);
-
-          labelArc
-            .endAngle(d.radian)
-            .startAngle(d.radian);
-
-          centroid = labelArc.centroid(d.radian);
-          return "translate(" + centroid + ")";
-        });
-    }
+        centroid = labelArc.centroid(d.radian);
+        return "translate(" + centroid + ")";
+      });
     this.animate();
   }
 
   ProgressIndicator.prototype = {
-
-    arcTween : function(d, i) {
-      var i = d3.interpolate({
-        startAngle: 0,
-        endAngle: 0
-      }, {
-        startAngle: d.startAngle,
-        endAngle: d.endAngle
-      });
-
-      return function(t) {
-        var b = i(t);
-        return arc(b);
-      };
-    },
 
     textTween : function(d, i) {
       var i = d3.interpolate(this.textContent, d);

@@ -1,0 +1,34 @@
+{
+  "name": "d3-progress-indicator",
+  "version": "0.0.0",
+  "description": "Radial progress indicators implemented with d3",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "3.5.3"
+  },
+  "devDependencies": {
+    "jasmine": "2.1.3"
+  },
+  "homepage": "https://github.com/thatguynamedandy/d3-progress-indicator",
+  "_release": "0.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.0",
+    "commit": "21ecc2a53a125a7530e9b04e1b205e38a9b9aa17"
+  },
+  "_source": "git://github.com/thatguynamedandy/d3-progress-indicator.git",
+  "_target": "~0.0.0",
+  "_originalSource": "d3-progress-indicator",
+  "_direct": true
+}

@@ -1,6 +1,14 @@
-.progress-indicator-1 .arc,
-.progress-indicator-1 .milestone {
+.progress-indicator .arc,
+.progress-indicator .milestone.achieved {
   fill:#FF4081
+}
+
+.progress-indicator .outer-circle {
+  fill:#EEEEEE;
+}
+
+.progress-indicator .inner-circle {
+  fill:white;
 }
 
 .progress-indicator {

@@ -44,9 +44,17 @@ Programmatically create your progress indicator, providing a selector for it to 
 
 ##Tests
 
-To run the tests..... blah karma blah jasmine
+Check out the project and install dependencies
+
+    npm install
+    bower install
+
+The run tests in karma
+
+    ./node_modules/karma/bin/karma start
+
 
 ##Limitations
-- Due to the difficulty of text wrapping in SVG, the xPadding value has to be
+- Due to the difficulty of text wrapping in SVG, the `xPadding` value has to be
   tweaked to make sure milestone labels fit in correctly. A future improvement may
   be to split labels on spaces.

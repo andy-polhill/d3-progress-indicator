@@ -1,5 +1,7 @@
 #D3 Progress Indicators
 
+<img src="https://api.travis-ci.org/thatguynamedandy/d3-progress-indicator.svg" />
+
 What started out as a bit of an experiment turned out pretty nice, so I thought
 I would put it out there and see if anyone has any interest in it.
 

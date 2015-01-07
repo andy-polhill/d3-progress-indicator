@@ -2,8 +2,10 @@ language: node_js
 node_js:
   - 0.10
 
-before_script:
-  - npm install -g karma -save-dev
+install:
+  - npm install -g karma
   - npm install -g bower
   - npm install karma-phantomjs-launcher
+
+before_script:
   - bower install

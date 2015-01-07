@@ -8,10 +8,9 @@ I would put it out there and see if anyone has any interest in it.
 Take a look at the examples below and let me know if you have any ideas for
 extensions/improvements
 
-http://thatguynamedandy.github.com/d3-progress-indicators
+http://thatguynamedandy.github.com/d3-progress-indicator
 
 ##Usage
-
 
     bower install d3-progress-indicator --save`
 

@@ -5,6 +5,7 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="description" content="Radial account creation progress indicatars, with milstones of achievement">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
     <link rel="stylesheet" type="text/css" media="screen" href="bower_components/d3-progress-indicator/lib/progress-indicator.css">
@@ -57,6 +58,7 @@
           Visually highlighting how complete an item is, overrides some simple display options.
           Additional styling is done via css.
         </p>
+        <button id="progress-indicator-1-animate">Animate</button>
         <div id="progress-indicator-1" class="progress-indicator"></div>
         <pre>
     new ProgressIndicator({
@@ -72,13 +74,14 @@
           <strong>Example 2: </strong>
           Inclusion of milestone data, colour indication of which milestones have been achieved.
         </p>
+        <button id="progress-indicator-2-animate">Animate</button>
         <div id="progress-indicator-2" class="progress-indicator"></div>
         <pre>
     new ProgressIndicator({
       selector: "#progress-indicator-2",
       xPadding: 110
     }, {
-      percentageCompleted: 78,
+      percentageCompleted: 72,
       milestones: [{
         value: 25,
         text: "Account created"
@@ -96,6 +99,7 @@
           <strong>Example 3: </strong>
           Another milestones example with a few additional display overrides
         </p>
+        <button id="progress-indicator-3-animate">Animate</button>
         <div id="progress-indicator-3" class="progress-indicator"></div>
         <pre>
     new ProgressIndicator({
@@ -135,7 +139,7 @@
     <script src="bower_components/d3/d3.min.js"></script>
     <script src="bower_components/d3-progress-indicator/lib/progress-indicator.js"></script>
     <script>
-      new ProgressIndicator({
+      var indicator1 = new ProgressIndicator({
         selector: "#progress-indicator-1",
         radius:50,
         fontSize:35
@@ -143,11 +147,15 @@
         percentageCompleted: 92,
       });
 
-      new ProgressIndicator({
+      document.getElementById('progress-indicator-1-animate').addEventListener("click", function() {
+        indicator1.animate();
+      });
+
+      var indicator2 = new ProgressIndicator({
         selector: "#progress-indicator-2",
         xPadding: 110
       }, {
-        percentageCompleted: 78,
+        percentageCompleted: 72,
         milestones: [{
           value: 25,
           text: "Account created"
@@ -160,7 +168,11 @@
         }]
       });
 
-      new ProgressIndicator({
+      document.getElementById('progress-indicator-2-animate').addEventListener("click", function() {
+        indicator2.animate();
+      });
+
+      var indicator3 = new ProgressIndicator({
         selector: "#progress-indicator-3",
         radius:60,
         fontSize:40,
@@ -181,6 +193,10 @@
           value: 80,
           text: "Level 4"
         }]
+      });
+
+      document.getElementById('progress-indicator-3-animate').addEventListener("click", function() {
+        indicator2.animate();
       });
 
     </script>

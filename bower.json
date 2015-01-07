@@ -8,11 +8,9 @@
   "license": "MIT",
   "private": false,
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "spec"
   ],
   "dependencies": {
     "d3": "3.5.3"

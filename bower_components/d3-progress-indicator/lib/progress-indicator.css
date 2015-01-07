@@ -1,0 +1,32 @@
+.progress-indicator .arc,
+.progress-indicator .milestone.achieved {
+  fill:#FF4081
+}
+
+.progress-indicator .outer-circle {
+  fill:#EEEEEE;
+}
+
+.progress-indicator .inner-circle {
+  fill:white;
+}
+
+.progress-indicator {
+  background-color: transparent;
+  font: 10px sans-serif;
+  text-shadow: none;
+}
+.progress-indicator .total {
+  font-weight: bold;
+  fill:#212121;
+}
+.progress-indicator .percent {
+  fill:#616161;
+}
+.progress-indicator .milestone {
+  fill:#ccc;
+}
+
+.progress-indicator .milestone-text {
+  font-size:12px;
+}
